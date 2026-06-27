@@ -1,0 +1,505 @@
+{
+  "name": "Gestion de Reservas",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook-reservas",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "01d2d3f8-e8c2-4fcc-90ff-829e4062cb8e",
+      "name": "Webhook",
+      "webhookId": "44a1123d-81a5-4773-89ae-d32528646275"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1b17f6b8-59b1-49f9-ac95-3f8cf946b36d",
+              "name": "Cliente",
+              "value": "={{ $json.body.cliente_nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "07ff42cf-1505-46f0-bd6c-0b32302edbf9",
+              "name": "Celular",
+              "value": "={{ $json.body.cliente_telefono }}",
+              "type": "string"
+            },
+            {
+              "id": "88bc227c-5a56-4483-993c-474aaef5904f",
+              "name": "Mascota",
+              "value": "={{ $json.body.mascota_name }}",
+              "type": "string"
+            },
+            {
+              "id": "1474581c-14eb-4d71-9dc2-26284e0a1d5b",
+              "name": "Especie",
+              "value": "={{ $json.body.mascota_tipo }}",
+              "type": "string"
+            },
+            {
+              "id": "9e2e9ad7-e762-4996-a64a-9e9ba1f0e4ca",
+              "name": "Servicio",
+              "value": "={{ $json.body.servicio }}",
+              "type": "string"
+            },
+            {
+              "id": "862367e3-fba3-483e-a42a-32c3b81e9333",
+              "name": "Check-In",
+              "value": "={{ $json.body.fecha_inicio }}",
+              "type": "string"
+            },
+            {
+              "id": "f48b37ac-bdb1-467e-8f2b-fce2754573ee",
+              "name": "Check-out",
+              "value": "={{ $json.body.fecha_fin }}",
+              "type": "string"
+            },
+            {
+              "id": "433b6345-3d1f-45c6-b494-0a68381f6dba",
+              "name": "Hora",
+              "value": "={{ $json.body.hora }}",
+              "type": "string"
+            },
+            {
+              "id": "2f8bd3a8-bc34-442a-9381-e98a60aff079",
+              "name": "Tamaño",
+              "value": "={{ $json.body.detalles.tamano }}",
+              "type": "string"
+            },
+            {
+              "id": "34c1a06d-ebf4-4bc3-bb72-630d771f4e1a",
+              "name": "Notas",
+              "value": "={{ $json.body.detalles.notas }}",
+              "type": "string"
+            },
+            {
+              "id": "2f9dd0a6-0d91-47b6-a003-731ddb1c76cd",
+              "name": "Precio",
+              "value": "={{ $json.body.precio_estimado }}",
+              "type": "number"
+            },
+            {
+              "id": "58092820-c6cc-4f09-9a1b-c6e6d78acec8",
+              "name": "Email",
+              "value": "={{ $json.body.cliente_email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "3e8c64df-0a7a-4b77-880f-6f62f18d845e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "tableId": "reservas",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "cliente_nombre",
+              "fieldValue": "={{ $json.Cliente }}"
+            },
+            {
+              "fieldId": "cliente_telefono",
+              "fieldValue": "={{ $json.Celular }}"
+            },
+            {
+              "fieldId": "mascota_nombre",
+              "fieldValue": "={{ $json.Mascota }}"
+            },
+            {
+              "fieldId": "mascota_tipo",
+              "fieldValue": "={{ $json.Especie }}"
+            },
+            {
+              "fieldId": "servicio",
+              "fieldValue": "={{ $json.Servicio }}"
+            },
+            {
+              "fieldId": "fecha_inicio",
+              "fieldValue": "={{ $json['Check-In'] }}"
+            },
+            {
+              "fieldId": "fecha_fin",
+              "fieldValue": "={{ $json['Check-out'] }}"
+            },
+            {
+              "fieldId": "hora",
+              "fieldValue": "={{ $json.Hora }}"
+            },
+            {
+              "fieldId": "detalles",
+              "fieldValue": "={{ $json.Notas }}"
+            },
+            {
+              "fieldId": "precio_estimado",
+              "fieldValue": "={{ $json.Precio }}"
+            },
+            {
+              "fieldId": "cliente_email",
+              "fieldValue": "={{ $json.Email }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "fc02d977-92cf-4329-82c3-3ba8c199edf6",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "8BAtCP3NYKeQ9pB0",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.servicio }}",
+                    "rightValue": "hotel",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  },
+                  {
+                    "leftValue": "={{ $json.servicio }}",
+                    "rightValue": "guarderia",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "or"
+              },
+              "renameOutput": true,
+              "outputKey": "Hoteleria y Guarderia"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.servicio }}",
+                    "rightValue": "hotel",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    }
+                  },
+                  {
+                    "leftValue": "={{ $json.servicio }}",
+                    "rightValue": "guarderia",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Otros"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        0
+      ],
+      "id": "f17fda97-5e24-4a3d-ba4b-77935d9b11c6",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "riberacoimbraeduardo@gmail.com",
+          "mode": "list",
+          "cachedResultName": "riberacoimbraeduardo@gmail.com"
+        },
+        "start": "={{ $('Edit Fields').item.json['Check-In'] }}T08:00:00",
+        "end": "={{ $('Edit Fields').item.json['Check-out'] }}T18:00:00",
+        "additionalFields": {
+          "description": "=Mascota: {{ $('Edit Fields').item.json.Mascota }} ({{ $('Edit Fields').item.json.Especie }}) \nCliente: {{ $('Edit Fields').item.json.Cliente }}\nWhatsApp: {{ $('Edit Fields').item.json.Celular }}\nEmail: {{ $('Edit Fields').item.json.Email }}\nTamaño del Perro: {{ $('Webhook').item.json.body.detalles.tamano }}\nAdicionales: {{ $('Webhook').item.json.body.detalles.addons.join(', ') }}\nNotas: {{ $('Edit Fields').item.json.Notas }}",
+          "summary": "=Reserva Hospedaje/Guardería ({{ $('Edit Fields').item.json.Servicio }}): {{ $('Edit Fields').item.json.Mascota }} ({{ $('Edit Fields').item.json.Cliente }})"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        944,
+        -112
+      ],
+      "id": "365754b6-bb20-4fe2-bf9d-204d7e88a8e0",
+      "name": "Google Calendar: Rango",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "pQ1jpXlxvQYXuDE6",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "riberacoimbraeduardo@gmail.com",
+          "mode": "list",
+          "cachedResultName": "riberacoimbraeduardo@gmail.com"
+        },
+        "start": "={{ $('Edit Fields').item.json['Check-In'] }}T{{ $('Edit Fields').item.json['Hora'] }}:00",
+        "end": "={{ (() => { const parts = $('Edit Fields').item.json['Hora'].split(':'); let h = parseInt(parts[0]) + 1; return $('Edit Fields').item.json['Check-In'] + 'T' + (h < 10 ? '0' + h : h) + ':' + parts[1] + ':00'; })() }}",
+        "additionalFields": {
+          "description": "=Mascota: {{ $('Edit Fields').item.json.Mascota }} ({{ $('Edit Fields').item.json.Especie }}) \nCliente: {{ $('Edit Fields').item.json.Cliente }}\nWhatsApp: {{ $('Edit Fields').item.json.Celular }}\nEmail: {{ $('Edit Fields').item.json.Email }}\nTamaño del Perro: {{ $('Webhook').item.json.body.detalles.tamano }}\nAdicionales: {{ ($('Webhook').item.json.body.detalles.addons || []).join(', ') }}\nNotas: {{ $('Edit Fields').item.json.Notas }}",
+          "summary": "=Reserva de {{ $('Edit Fields').item.json.Servicio.toUpperCase() }}: {{ $('Edit Fields').item.json.Mascota }} ({{ $('Edit Fields').item.json.Cliente }})"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        944,
+        80
+      ],
+      "id": "01d102bb-ce85-49e2-9fcb-a1a0f44bbe80",
+      "name": "Google Calendar: Hora",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "pQ1jpXlxvQYXuDE6",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Por favor, redacta el correo de confirmación de reserva para el siguiente cliente:\n\nCliente: {{ $('Edit Fields').item.json.Cliente }}\nEmail: {{ $('Edit Fields').item.json.Email }}\nTeléfono: {{ $('Edit Fields').item.json.Celular }}\nMascota: {{ $('Edit Fields').item.json.Mascota }} (Tipo: {{ $('Edit Fields').item.json.Especie }})\nServicio Solicitado: {{ $('Edit Fields').item.json.Servicio }}\nFecha de la Cita: {{ $('Edit Fields').item.json['Check-In'] }}\n{{ $('Webhook').item.json.body.fecha_fin ? 'Fecha de Salida (Check-out): ' + $('Webhook').item.json.body.fecha_fin : '' }}\n{{ $('Webhook').item.json.body.hora ? 'Hora de la Cita: ' + $('Webhook').item.json.body.hora : '' }}\n\nAdicionales Seleccionados: {{ $('Webhook').item.json.body.detalles.addons.join(', ') }}\nTamaño de la Mascota: {{ $('Edit Fields').item.json['Tamaño'] }}\nNotas / Alergias del cliente: {{ $('Edit Fields').item.json.Notas || 'Ninguna'}}\nPrecio Estimado: Bs. {{ $('Edit Fields').item.json.Precio }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Eres Koko, el asistente virtual y especialista en bienestar de mascotas de PetCenter (Santa Cruz, Bolivia).\nTu tarea es redactar un correo electrónico de confirmación para una solicitud de reserva de servicio en formato HTML.\n\nSigue estas pautas para la redacción:\n- Mantén un tono alegre, profesional, atento y amante de las mascotas (usa emojis de patitas 🐾, perritos 🐶, gatitos 🐱).\n- Agradece la confianza del dueño y dile que estamos ansiosos por mimar o atender a su mascota.\n- Presenta de forma clara los detalles del servicio seleccionado (fecha, hora, tipo de mascota, nombre de la mascota, adicionales y precio estimado).\n- Explica de forma clara que la cita está pre-reservada en nuestro calendario y que un asesor los contactará pronto por WhatsApp para la confirmación definitiva.\n- Genera una estructura HTML limpia y ordenada (usa listas, negritas, emojis).\n- IMPORTANTE: Devuelve ÚNICAMENTE el código HTML limpio, sin bloques de código de markdown (como ```html ... ```). Empieza directamente con el contenido HTML (por ejemplo, con <h3> o <div>)."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1280,
+        -16
+      ],
+      "id": "2ef248b6-a4e8-44e5-a7d5-2b997e686738",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        144
+      ],
+      "id": "13d427d1-a0ce-452e-8c33-d86957c61ead",
+      "name": "DeepSeek Chat Model",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "tFhRt7newpcbr0xh",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').item.json.Email }}",
+        "subject": "📅 Confirmación de Solicitud de Cita - PetCenter 🐾",
+        "message": "={{ $json.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1632,
+        -16
+      ],
+      "id": "e069e2a6-822a-4b4a-829d-373bc26730ff",
+      "name": "Send a message",
+      "webhookId": "d97d7570-3954-44d3-b14d-eb50d5573924",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LacexkYEOdIkpJlk",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar: Rango",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Calendar: Hora",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar: Rango": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar: Hora": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "5e2fbdd8-71d0-4fea-bcb7-1e1511bbe21a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "edfa04da4352b76b714045fcefc9f1227bab9d1c576bb2ee9c95c16dda382075"
+  },
+  "id": "wlI2Cyz1VkflOHLo",
+  "tags": [
+    {
+      "updatedAt": "2026-06-12T19:35:01.719Z",
+      "createdAt": "2026-06-12T19:35:01.719Z",
+      "id": "3edYe8MvlfjjUgMg",
+      "name": "PetCenter"
+    },
+    {
+      "updatedAt": "2026-06-12T19:35:07.818Z",
+      "createdAt": "2026-06-12T19:35:07.818Z",
+      "id": "7PPf8NKmbWwAnJhY",
+      "name": "Proyecto"
+    }
+  ]
+}

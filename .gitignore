@@ -18,3 +18,7 @@ node_modules/
 Thumbs.db
 .DS_Store
 desktop.ini
+
+# Temporary docs repo
+temp-docs/
+

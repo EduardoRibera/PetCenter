@@ -1,0 +1,292 @@
+{
+  "name": "Pedidos",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook-pedidos",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b52f87fd-8fc3-4fff-9c34-62884cb630e6",
+      "name": "Webhook",
+      "webhookId": "1fc09d5d-cb09-41dc-8f5e-a066e198a733"
+    },
+    {
+      "parameters": {
+        "tableId": "pedidos",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "cliente_nombre",
+              "fieldValue": "={{ $json.Cliente }}"
+            },
+            {
+              "fieldId": "cliente_telefono",
+              "fieldValue": "={{ $json.Celular }}"
+            },
+            {
+              "fieldId": "cliente_direccion",
+              "fieldValue": "={{ $json.Direccion }}"
+            },
+            {
+              "fieldId": "metodo_pago",
+              "fieldValue": "={{ $json.MetodoDePago }}"
+            },
+            {
+              "fieldId": "notas",
+              "fieldValue": "={{ $json.Notas }}"
+            },
+            {
+              "fieldId": "items",
+              "fieldValue": "={{ $json.Items }}"
+            },
+            {
+              "fieldId": "total",
+              "fieldValue": "={{ $json.Total }}"
+            },
+            {
+              "fieldId": "cliente_email",
+              "fieldValue": "={{ $json.Email }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "9b080d22-627f-462d-8e59-4003931de31d",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "8BAtCP3NYKeQ9pB0",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "58ad9acc-ac9f-41e7-a77d-4b1d23a90a1b",
+              "name": "Cliente",
+              "value": "={{ $json.body.cliente_nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "56736484-149f-408d-80cb-ee091765369d",
+              "name": "Celular",
+              "value": "={{ $json.body.cliente_telefono }}",
+              "type": "string"
+            },
+            {
+              "id": "2501381c-1b7d-42e8-9647-e0d0243bd89f",
+              "name": "Direccion",
+              "value": "={{ $json.body.cliente_direccion }}",
+              "type": "string"
+            },
+            {
+              "id": "c82e6125-bfa3-4191-bd60-3e18aa69080d",
+              "name": "MetodoDePago",
+              "value": "={{ $json.body.metodo_pago }}",
+              "type": "string"
+            },
+            {
+              "id": "f6ceafc1-6372-40eb-9301-7476b860a392",
+              "name": "Notas",
+              "value": "={{ $json.body.notas }}",
+              "type": "string"
+            },
+            {
+              "id": "a51fe254-5dcf-43b7-ad6f-090c70a47ac6",
+              "name": "Items",
+              "value": "={{ $json.body.items }}",
+              "type": "array"
+            },
+            {
+              "id": "19299ecf-ed2d-4a9a-bdbf-4086a7f81864",
+              "name": "Total",
+              "value": "={{ $json.body.total }}",
+              "type": "number"
+            },
+            {
+              "id": "19b1bff1-3a1a-4799-8ea9-3ef9a3ec502e",
+              "name": "Email",
+              "value": "={{ $json.body.cliente_email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e987d4f5-bbcd-4eeb-8aae-d86bc8b0aca9",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Genera el correo HTML de confirmación para este pedido:\n\nCliente: {{ $('Edit Fields').item.json.Cliente }}\nEmail: {{ $('Edit Fields').item.json.Email }}\nTeléfono: {{ $('Edit Fields').item.json.Celular }}\nDirección: {{ $('Edit Fields').item.json.Direccion }}\nMétodo de Pago: {{ $('Edit Fields').item.json.MetodoDePago }}\nNotas: {{ $('Edit Fields').item.json.Notas }}\nTotal: Bs. {{ $('Edit Fields').item.json.Total }}\n\nLista de artículos comprados:\n{{ JSON.stringify($('Edit Fields').item.json.Items) }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Eres Koko, el asistente de postventa de \"PetCenter\", una tienda de mascotas premium en Santa Cruz, Bolivia. Tu tarea es redactar un correo electrónico de confirmación de pedido en formato HTML puro y elegante.  REGLAS ESTRICTAS DE FORMATO: 1. Responde ÚNICAMENTE con el código HTML del correo. No incluyas explicaciones, comentarios, ni bloques de código markdown (nada de ```html). Solo el HTML puro comenzando con <div> o <table>. 2. Usa estilos CSS en línea (inline styles) para garantizar compatibilidad con Gmail y Outlook. 3. Ancho máximo del contenedor: 600px, centrado, con fondo blanco (#ffffff) y borde redondeado suave. 4. Tipografía: font-family: 'Arial', 'Helvetica', sans-serif.  PALETA DE COLORES DE LA MARCA: - Color principal (encabezados, bordes): #028090 (Teal/Azul Verdoso) - Color de acento (total, botones): #f26419 (Naranja) - Texto principal: #2f3e46 (Gris Oscuro) - Fondo del cuerpo: #f4f7f6 (Gris Claro)  ESTRUCTURA OBLIGATORIA DEL CORREO: 1. ENCABEZADO: Franja superior con fondo #028090 y texto blanco. Incluir el logo textual \"🐾 PetCenter\" y el texto \"Confirmación de Pedido\". 2. SALUDO: \"¡Hola [Nombre del Cliente]!\" en tono cálido y amigable. 3. MENSAJE: Un párrafo corto confirmando que el pedido fue recibido exitosamente y está siendo preparado. 4. TABLA DE PRODUCTOS: Una tabla HTML limpia con bordes suaves y las columnas:    - Producto (nombre del artículo)    - Cantidad    - Precio Unit. (en Bs.)    - Subtotal (precio × cantidad, en Bs.)    Alterna el color de fondo de las filas para mejor legibilidad (zebra striping). 5. FILA DE TOTAL: Debajo de la tabla, mostrar \"TOTAL A PAGAR: Bs. [total]\" en fuente grande, negrita y color naranja #f26419. 6. DATOS DE ENTREGA: Un bloque con fondo #f4f7f6 mostrando:    - 📍 Dirección de entrega    - 📞 Teléfono/WhatsApp de contacto    - 💳 Método de pago elegido    - 📝 Notas especiales (si las hay) 7. DESPEDIDA: Mensaje cálido indicando que el equipo de PetCenter está preparando el pedido con mucho cariño y que se comunicarán por WhatsApp para coordinar la entrega. 8. PIE DE CORREO: Texto pequeño en gris con \"© 2026 PetCenter - Santa Cruz, Bolivia | +591 70000000\" y la frase \"Este correo fue generado automáticamente\".  REGLAS ADICIONALES: - Si el campo de notas está vacío o dice \"undefined\", simplemente no incluyas la sección de notas. - Cada artículo del pedido viene en formato JSON con campos: nombre, precio, quantity. Usa esos campos para armar la tabla. - Todos los precios deben mostrarse con 2 decimales y en Bolivianos (Bs.)."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        624,
+        0
+      ],
+      "id": "46b1dd82-2086-48c8-869d-1cbb6e5bc72c",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        624,
+        192
+      ],
+      "id": "546d5b9a-5dd4-4b50-abad-8e00a6df5cb6",
+      "name": "DeepSeek Chat Model",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "tFhRt7newpcbr0xh",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').item.json.Email }}",
+        "subject": "🐾 ¡Pedido Confirmado! Tu recibo de PetCenter",
+        "message": "={{ $json.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        976,
+        0
+      ],
+      "id": "e8da95eb-e97a-426b-aaff-bf307186f34d",
+      "name": "Send a message",
+      "webhookId": "e4967b03-11c7-411f-83b5-c043dd12bcba",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LacexkYEOdIkpJlk",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0e3c712a-baa0-4be8-ab07-ec475a3a5cc4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "edfa04da4352b76b714045fcefc9f1227bab9d1c576bb2ee9c95c16dda382075"
+  },
+  "id": "PVJEMBe4UBeQdWG8",
+  "tags": [
+    {
+      "updatedAt": "2026-06-12T19:35:01.719Z",
+      "createdAt": "2026-06-12T19:35:01.719Z",
+      "id": "3edYe8MvlfjjUgMg",
+      "name": "PetCenter"
+    },
+    {
+      "updatedAt": "2026-06-12T19:35:07.818Z",
+      "createdAt": "2026-06-12T19:35:07.818Z",
+      "id": "7PPf8NKmbWwAnJhY",
+      "name": "Proyecto"
+    }
+  ]
+}

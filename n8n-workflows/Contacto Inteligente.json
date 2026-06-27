@@ -1,0 +1,283 @@
+{
+  "name": "Contacto Inteligente",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook-contacto",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3a7d801e-8b19-4b6a-8125-01de0b6b3c50",
+      "name": "Webhook",
+      "webhookId": "bb340b45-b537-439c-b5ee-c68a90318885"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        432,
+        176
+      ],
+      "id": "e93a00db-da33-46fd-967d-32471ad61725",
+      "name": "DeepSeek Chat Model",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "tFhRt7newpcbr0xh",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ea6b6047-1ed8-4455-ad86-bfade058d538",
+              "name": "Cliente",
+              "value": "={{ $json.body.nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "ea309342-f6ad-48e9-b0f4-25330fc9cbdc",
+              "name": "Email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "79dfcbc3-5744-49cc-9e7f-f68cc418fcea",
+              "name": "Asunto",
+              "value": "={{ $json.body.asunto }}",
+              "type": "string"
+            },
+            {
+              "id": "f9495508-1ce1-489e-b493-4ad386771950",
+              "name": "Mensaje",
+              "value": "={{ $json.body.mensaje }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "707ff67c-91ee-4e14-8da5-167646fe18ad",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Por favor responde a este mensaje enviado por un cliente:\n\nNombre del cliente: {{ $json.Cliente }}\nAsunto de la consulta: {{ $json.Asunto }}\nCuerpo del mensaje:\n\"{{ $json.Mensaje }}\"",
+        "options": {
+          "systemMessage": "Eres Koko, el asistente inteligente de atención al cliente de \"PetCenter\" (un centro integral de bienestar para mascotas). Tu trabajo es responder a los mensajes que los clientes envían a través de nuestro sitio web.\n\nINFORMACIÓN DEL NEGOCIO (Contexto):\n- Dirección: Av. Principal PetCenter #123, Santa Cruz, Bolivia.\n- Teléfonos: +591 70000000 / +591 3-3000000\n- Horario de Atención: Lunes a Sábado de 08:00 a 20:00. Domingos de 09:00 a 16:00.\n- Servicios principales:\n  * Baños y Spa: Desde perros pequeños hasta gigantes, baños medicados y VIP.\n  * Peluquería: Cortes estéticos y de raza, higiene general.\n  * Guardería y Piscina: Diversión saludable, natación recreativa y socialización.\n  * Hotel Pet: Hospedaje seguro para perros y gatos. Requiere vacunas al día y desparasitación externa/interna.\n  * Veterinaria y Farmacia: Consultas médicas generales, ecografías y venta de medicamentos de marca.\n\nINSTRUCCIONES DE RESPUESTA:\n1. Sé extremadamente amable, empático y profesional. Saluda al cliente por su nombre si está disponible.\n2. Si el cliente pregunta por disponibilidad de productos o marcas de alimentos, menciónale que contamos con Royal Canin, Pro Plan, Eukanuba, VitalCan, etc., y que puede comprar directamente en nuestra sección de tienda online (/shop.html).\n3. Si la pregunta requiere información detallada que no posees, indícale amablemente que un agente humano se comunicará con él vía WhatsApp a la brevedad.\n4. Tu respuesta debe redactarse en formato HTML limpio para que el correo se envíe con buen diseño (usa etiquetas <p>, <strong>, <ul>, <li> para dar estructura).\n5. Firma siempre como: \"Koko - Asistente Virtual de PetCenter 🐾\".\n6. Si el mensaje no tiene nada que ver con el establecimiento responde con un: \"Lo siento pero no tengo información relacionada con su consulta\" o algo similar\n\nREGLAS ESTRICTAS DE FORMATO:\n1. Responde ÚNICAMENTE con el código HTML del correo. No incluyas explicaciones, comentarios, ni bloques de código markdown (nada de ```html). Solo el HTML puro comenzando con <div> o <table>.\n2. Usa estilos CSS en línea (inline styles) para garantizar compatibilidad con Gmail y Outlook.\n3. Ancho máximo del contenedor: 600px, centrado, con fondo blanco (#ffffff) y borde redondeado suave.\n4. Tipografía: font-family: 'Arial', 'Helvetica', sans-serif.\n\nPALETA DE COLORES DE LA MARCA:\n- Color principal (encabezados, bordes): #028090 (Teal/Azul Verdoso)\n- Color de acento (total, botones): #f26419 (Naranja)\n- Texto principal: #2f3e46 (Gris Oscuro)\n- Fondo del cuerpo: #f4f7f6 (Gris Claro)\n\nESTRUCTURA OBLIGATORIA DEL CORREO:\n1. ENCABEZADO: Franja superior con fondo #028090 y texto blanco. Incluir el logo textual \"🐾 PetCenter\" y el texto \"Confirmación de Pedido\".\n2. SALUDO: \"¡Hola [Nombre del Cliente]!\" en tono cálido y amigable.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        432,
+        0
+      ],
+      "id": "9d265788-8e0c-442b-b7de-85e0848c3d7e",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').item.json.Email }}",
+        "subject": "={{ $('Edit Fields').item.json.Asunto }}",
+        "message": "={{ $json.MensajeIA }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        944,
+        0
+      ],
+      "id": "ffb79494-3bcd-4023-b96f-a4d63036200f",
+      "name": "Send a message",
+      "webhookId": "6cade7cc-3ee0-4ee1-bb86-1db65902dff4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LacexkYEOdIkpJlk",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "mensajes",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "nombre",
+              "fieldValue": "={{ $('Edit Fields').item.json.Cliente }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $('Edit Fields').item.json.Email }}"
+            },
+            {
+              "fieldId": "asunto",
+              "fieldValue": "={{ $('Edit Fields').item.json.Asunto }}"
+            },
+            {
+              "fieldId": "mensaje",
+              "fieldValue": "={{ $('Edit Fields').item.json.Mensaje }}"
+            },
+            {
+              "fieldId": "respuesta_ia",
+              "fieldValue": "={{ $('Edit Fields1').item.json.MensajeIA }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1152,
+        0
+      ],
+      "id": "a1a5b473-b77c-449d-87d6-258b2ca47352",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "8BAtCP3NYKeQ9pB0",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "242ee5b1-14d1-4436-aa97-6a76c5352cca",
+              "name": "MensajeIA",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        752,
+        0
+      ],
+      "id": "b57ed56a-0087-472d-a3ee-fd76b27705e1",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ce79ce1e-dd64-4af0-9df7-9550abc00c0d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "edfa04da4352b76b714045fcefc9f1227bab9d1c576bb2ee9c95c16dda382075"
+  },
+  "id": "wVYFawYjIU4UHiQY",
+  "tags": [
+    {
+      "updatedAt": "2026-06-12T19:35:01.719Z",
+      "createdAt": "2026-06-12T19:35:01.719Z",
+      "id": "3edYe8MvlfjjUgMg",
+      "name": "PetCenter"
+    },
+    {
+      "updatedAt": "2026-06-12T19:35:07.818Z",
+      "createdAt": "2026-06-12T19:35:07.818Z",
+      "id": "7PPf8NKmbWwAnJhY",
+      "name": "Proyecto"
+    }
+  ]
+}
