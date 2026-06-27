@@ -1,6 +1,7 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "PetCenter Manual",
+  "favicon": "https://img.icons8.com/emoji/48/paw-prints.png",
   "colors": {
     "primary": "#f27427",
     "light": "#f68b3c",
