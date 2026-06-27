@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda Pet Shop - PetCenter</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">🐾</span> Pet<span>Center</span>
+      </a>
+      <button class="menu-toggle" id="menu-toggle">☰</button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="shop.html" class="active">Pet Shop</a></li>
+        <li><a href="reservas.html">Reservas</a></li>
+        <li><a href="nosotros.html">Nosotros</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="carrito.html" class="cart-icon-btn">
+          🛒 <span class="cart-badge" id="cart-badge">0</span>
+        </a>
+        <a href="config.html" class="btn-config">
+          ⚙️ Config
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Title section -->
+  <main class="container section" style="padding-top: 50px;">
+    <div class="section-header" style="margin-bottom: 20px;">
+      <h2>Tienda en Línea</h2>
+      <p>Alimentos premium, juguetes interactivos, accesorios de paseo y farmacia especializada para tu mascota.</p>
+    </div>
+
+    <!-- Shop Layout (Sidebar + Grid) -->
+    <div class="shop-layout">
+      
+      <!-- Sidebar Filters -->
+      <aside class="sidebar">
+        <div class="search-box">
+          <input type="text" id="shop-search" placeholder="Buscar producto...">
+          <button id="btn-search">🔍</button>
+        </div>
+        
+        <h3 class="sidebar-title">Filtros</h3>
+        
+        <div class="filter-group">
+          <h4>Tipo de Animal</h4>
+          <ul class="filter-list">
+            <li class="filter-item">
+              <label class="filter-label">
+                <input type="radio" name="filter-animal" value="all" checked> Todos
+              </label>
+            </li>
+            <li class="filter-item">
+              <label class="filter-label">
+                <input type="radio" name="filter-animal" value="perros"> Perros 🐶
+              </label>
+            </li>
+            <li class="filter-item">
+              <label class="filter-label">
+                <input type="radio" name="filter-animal" value="gatos"> Gatos 🐱
+              </label>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="filter-group">
+          <h4>Categorías</h4>
+          <ul class="filter-list">
+            <li class="filter-item">
+              <label class="filter-label">
+                <input type="checkbox" class="filter-cat" value="Alimentos"> Alimentos
+              </label>
+            </li>
+            <li class="filter-item">
+              <label class="filter-label">
+                <input type="checkbox" class="filter-cat" value="Farmacia"> Farmacia
+              </label>
+            </li>
+            <li class="filter-item">
+              <label class="filter-label">
+                <input type="checkbox" class="filter-cat" value="Accesorios"> Accesorios
+              </label>
+            </li>
+            <li class="filter-item">
+              <label class="filter-label">
+                <input type="checkbox" class="filter-cat" value="Juguetes"> Juguetes
+              </label>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="filter-group">
+          <h4>Marcas</h4>
+          <ul class="filter-list" id="brand-list">
+            <li class="filter-item">
+              <label class="filter-label">
+                <input type="checkbox" class="filter-brand" value="Royal Canin"> Royal Canin
+              </label>
+            </li>
+            <li class="filter-item">
+              <label class="filter-label">
+                <input type="checkbox" class="filter-brand" value="Pro Plan"> Pro Plan
+              </label>
+            </li>
+            <li class="filter-item">
+              <label class="filter-label">
+                <input type="checkbox" class="filter-brand" value="NexGard"> NexGard
+              </label>
+            </li>
+          </ul>
+        </div>
+
+        <div class="filter-group">
+          <h4>Rango de Precios</h4>
+          <ul class="filter-list">
+            <li class="filter-item">
+              <label class="filter-label">
+                <input type="radio" name="filter-price" value="all" checked> Todos
+              </label>
+            </li>
+            <li class="filter-item">
+              <label class="filter-label">
+                <input type="radio" name="filter-price" value="0-100"> Menos de Bs. 100
+              </label>
+            </li>
+            <li class="filter-item">
+              <label class="filter-label">
+                <input type="radio" name="filter-price" value="100-300"> Bs. 100 - Bs. 300
+              </label>
+            </li>
+            <li class="filter-item">
+              <label class="filter-label">
+                <input type="radio" name="filter-price" value="300+"> Más de Bs. 300
+              </label>
+            </li>
+          </ul>
+        </div>
+        
+        <button id="btn-clear-filters" class="btn btn-outline" style="width: 100%; padding: 8px; font-size: 0.85rem; border-radius: var(--radius-sm);">Limpiar Filtros</button>
+      </aside>
+
+      <!-- Products Content Area -->
+      <section>
+        <div class="shop-content-header">
+          <div class="product-count">
+            Mostrando <span id="product-display-count">0</span> productos
+          </div>
+          <div class="sort-box">
+            <select id="sort-select">
+              <option value="default">Relevancia</option>
+              <option value="price-asc">Precio: Menor a Mayor</option>
+              <option value="price-desc">Precio: Mayor a Menor</option>
+              <option value="name-asc">Nombre: A - Z</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="products-grid" id="shop-products-grid">
+          <!-- Loaded dynamically via JS -->
+        </div>
+      </section>
+      
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo">🐾 Pet<span>Center</span></div>
+        <p>Pensamos en la salud y el bienestar integral de tu mascota. Visítanos o haz tu pedido en línea hoy mismo.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Servicios</h3>
+        <ul>
+          <li><a href="reservas.html?servicio=hotel">Hotel Pet</a></li>
+          <li><a href="reservas.html?servicio=banos">Baños & Spa</a></li>
+          <li><a href="reservas.html?servicio=peluqueria">Peluquería Canina</a></li>
+          <li><a href="reservas.html?servicio=guarderia">Guardería & Piscina</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Tienda</h3>
+        <ul>
+          <li><a href="shop.html?cat=alimentos">Alimentos</a></li>
+          <li><a href="shop.html?cat=farmacia">Farmacia</a></li>
+          <li><a href="shop.html?cat=juguetes">Juguetes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Contacto</h3>
+        <p>📞 +591 70000000<br>
+        📧 contacto@petcenter.com<br>
+        📍 Av. Principal #123, Santa Cruz, Bolivia</p>
+      </div>
+    </div>
+    <div class="footer-bottom container">
+      <p>&copy; 2026 PetCenter. Todos los derechos reservados. Creado con 🧡 para tus mejores amigos.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="supabase-n8n.js"></script>
+  <script src="app.js"></script>
+  <script>
+    let allProducts = [];
+    
+    // Elements
+    const grid = document.getElementById('shop-products-grid');
+    const displayCount = document.getElementById('product-display-count');
+    const searchInput = document.getElementById('shop-search');
+    const sortSelect = document.getElementById('sort-select');
+    
+    // Fetch products and run initial load
+    async function loadShop() {
+      grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">Cargando catálogo de productos...</p>';
+      
+      allProducts = await fetchProducts();
+      
+      // Handle URL query parameters (e.g. shop.html?cat=farmacia)
+      parseUrlParams();
+      
+      filterAndRenderProducts();
+      setupEventListeners();
+    }
+    
+    // Parse query parameters
+    function parseUrlParams() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const cat = urlParams.get('cat');
+      if (cat) {
+        // Find matching checkbox and check it
+        const catCheckboxes = document.querySelectorAll('.filter-cat');
+        catCheckboxes.forEach(cb => {
+          if (cb.value.toLowerCase().includes(cat.toLowerCase())) {
+            cb.checked = true;
+          }
+        });
+      }
+    }
+    
+    // Filter and Render logic
+    function filterAndRenderProducts() {
+      let filtered = [...allProducts];
+      
+      // 1. Text Search Filter
+      const query = searchInput.value.toLowerCase().trim();
+      if (query) {
+        filtered = filtered.filter(p => 
+          p.nombre.toLowerCase().includes(query) || 
+          (p.descripcion && p.descripcion.toLowerCase().includes(query)) ||
+          (p.marca && p.marca.toLowerCase().includes(query))
+        );
+      }
+      
+      // 2. Animal Filter (Radio)
+      const animalFilter = document.querySelector('input[name="filter-animal"]:checked').value;
+      if (animalFilter !== 'all') {
+        filtered = filtered.filter(p => p.animal.toLowerCase() === animalFilter);
+      }
+      
+      // 3. Category Filter (Checkbox)
+      const selectedCats = Array.from(document.querySelectorAll('.filter-cat:checked')).map(cb => cb.value);
+      if (selectedCats.length > 0) {
+        filtered = filtered.filter(p => selectedCats.includes(p.categoria));
+      }
+      
+      // 4. Brand Filter (Checkbox)
+      const selectedBrands = Array.from(document.querySelectorAll('.filter-brand:checked')).map(cb => cb.value.toLowerCase());
+      if (selectedBrands.length > 0) {
+        filtered = filtered.filter(p => p.marca && selectedBrands.includes(p.marca.toLowerCase()));
+      }
+      
+      // 5. Price Range Filter (Radio)
+      const priceFilter = document.querySelector('input[name="filter-price"]:checked').value;
+      if (priceFilter !== 'all') {
+        if (priceFilter === '0-100') {
+          filtered = filtered.filter(p => p.precio < 100);
+        } else if (priceFilter === '100-300') {
+          filtered = filtered.filter(p => p.precio >= 100 && p.precio <= 300);
+        } else if (priceFilter === '300+') {
+          filtered = filtered.filter(p => p.precio > 300);
+        }
+      }
+      
+      // 6. Sorting
+      const sortVal = sortSelect.value;
+      if (sortVal === 'price-asc') {
+        filtered.sort((a, b) => a.precio - b.precio);
+      } else if (sortVal === 'price-desc') {
+        filtered.sort((a, b) => b.precio - a.precio);
+      } else if (sortVal === 'name-asc') {
+        filtered.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      }
+      
+      // Render count
+      displayCount.textContent = filtered.length;
+      
+      // Render grid
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px;">No se encontraron productos con los filtros seleccionados.</p>';
+        return;
+      }
+      
+      grid.innerHTML = '';
+      filtered.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div class="product-img">
+            <img src="${product.imagen_url}" alt="${product.nombre}">
+            ${product.stock < 10 ? `<span class="product-badge">Pocas Unidades</span>` : ''}
+          </div>
+          <div class="product-info">
+            <span class="product-category">${product.categoria}</span>
+            <h3 class="product-title">${product.nombre}</h3>
+            <div class="product-meta">
+              <span class="product-price">Bs. ${Number(product.precio).toFixed(2)}</span>
+              <button class="btn-add-cart">🛒</button>
+            </div>
+          </div>
+        `;
+        
+        card.querySelector('.btn-add-cart').addEventListener('click', () => {
+          addToCart(product, 1);
+        });
+        
+        grid.appendChild(card);
+      });
+    }
+    
+    // Event listeners
+    function setupEventListeners() {
+      // Inputs event listeners to filter in real-time
+      searchInput.addEventListener('input', filterAndRenderProducts);
+      sortSelect.addEventListener('change', filterAndRenderProducts);
+      
+      document.querySelectorAll('input[name="filter-animal"]').forEach(radio => {
+        radio.addEventListener('change', filterAndRenderProducts);
+      });
+      
+      document.querySelectorAll('.filter-cat').forEach(cb => {
+        cb.addEventListener('change', filterAndRenderProducts);
+      });
+      
+      document.querySelectorAll('.filter-brand').forEach(cb => {
+        cb.addEventListener('change', filterAndRenderProducts);
+      });
+      
+      document.querySelectorAll('input[name="filter-price"]').forEach(radio => {
+        radio.addEventListener('change', filterAndRenderProducts);
+      });
+      
+      // Clear filters button
+      document.getElementById('btn-clear-filters').addEventListener('click', () => {
+        searchInput.value = '';
+        sortSelect.value = 'default';
+        
+        document.querySelector('input[name="filter-animal"][value="all"]').checked = true;
+        document.querySelector('input[name="filter-price"][value="all"]').checked = true;
+        
+        document.querySelectorAll('.filter-cat').forEach(cb => cb.checked = false);
+        document.querySelectorAll('.filter-brand').forEach(cb => cb.checked = false);
+        
+        filterAndRenderProducts();
+        showToast('Filtros restaurados', 'info');
+      });
+    }
+    
+    document.addEventListener('DOMContentLoaded', loadShop);
+  </script>
+</body>
+</html>

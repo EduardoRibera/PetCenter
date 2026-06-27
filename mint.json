@@ -1,0 +1,26 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "PetCenter Manual",
+  "colors": {
+    "primary": "#f27427",
+    "light": "#f68b3c",
+    "dark": "#b84f14"
+  },
+  "navigation": [
+    {
+      "group": "Comenzando",
+      "pages": [
+        "docs/introduction",
+        "docs/quickstart"
+      ]
+    },
+    {
+      "group": "Manual de Uso",
+      "pages": [
+        "docs/configuracion",
+        "docs/tienda",
+        "docs/reservas"
+      ]
+    }
+  ]
+}

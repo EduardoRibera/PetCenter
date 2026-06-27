@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petshop - Shop de PetCenter</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">🐾</span> Pet<span>Center</span>
+      </a>
+      <button class="menu-toggle" id="menu-toggle">☰</button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html" class="active">Inicio</a></li>
+        <li><a href="shop.html">Pet Shop</a></li>
+        <li><a href="reservas.html">Reservas</a></li>
+        <li><a href="nosotros.html">Nosotros</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="carrito.html" class="cart-icon-btn">
+          🛒 <span class="cart-badge" id="cart-badge">0</span>
+        </a>
+        <a href="config.html" class="btn-config">
+          ⚙️ Config
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <h1>Un mundo <span>feliz</span> para tu mascota</h1>
+        <p>En PetCenter nos apasiona el cuidado y felicidad de tus compañeros de cuatro patas. Ofrecemos alimentos de la más alta calidad, spa canino, hotel y guardería de primer nivel, y atención veterinaria profesional.</p>
+        <div class="hero-actions">
+          <a href="shop.html" class="btn btn-primary">🛒 Ir a la Tienda</a>
+          <a href="reservas.html" class="btn btn-secondary">📅 Reservar Cita</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&q=80&w=600" alt="Perro y gato felices con sus dueños">
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="container section">
+    <div class="section-header">
+      <h2>Servicios Integrales</h2>
+      <p>Todo lo que tu mascota necesita para vivir saludable, feliz y lleno de energía.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon-box">🛁</div>
+        <h3>Baños & Spa</h3>
+        <p>Higiene profunda con shampoos hidratantes, tratamientos antialérgicos y masajes relajantes para consentir a tu mascota.</p>
+        <a href="reservas.html?servicio=banos" class="btn-link">Ver Reservar &rarr;</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-box">✂️</div>
+        <h3>Peluquería Canina</h3>
+        <p>Cortes profesionales estéticos y de raza realizados por expertos en estilismo canino y felino con todo el amor y paciencia.</p>
+        <a href="reservas.html?servicio=peluqueria" class="btn-link">Ver Reservar &rarr;</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-box">🏨</div>
+        <h3>Hotel & Hospedaje</h3>
+        <p>Suites climatizadas con atención médica las 24 horas. Tu mascota se sentirá como en casa en sus vacaciones con nosotros.</p>
+        <a href="reservas.html?servicio=hotel" class="btn-link">Ver Reservar &rarr;</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-box">🏊</div>
+        <h3>Guardería & Piscina</h3>
+        <p>Espacios amplios de recreación libre y piscina adaptada para perros. Ideal para socialización activa y ejercicio saludable.</p>
+        <a href="reservas.html?servicio=guarderia" class="btn-link">Ver Reservar &rarr;</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-box">🏥</div>
+        <h3>Veterinaria</h3>
+        <p>Consultas generales, desparasitaciones, ecografías y planes completos de vacunación para cuidar su salud.</p>
+        <a href="reservas.html?servicio=veterinaria" class="btn-link">Ver Reservar &rarr;</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-box">💊</div>
+        <h3>Farmacia Pet</h3>
+        <p>Gran variedad de medicamentos certificados, antiinflamatorios, antibióticos y protectores hepáticos.</p>
+        <a href="shop.html?cat=farmacia" class="btn-link">Ver Tienda &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Offer Banner Section -->
+  <section class="container">
+    <div class="offer-banner">
+      <div class="offer-grid">
+        <div class="offer-content">
+          <h2>🎉 ¡Promoción del Día del Padre!</h2>
+          <p>Obtén un <strong>15% de descuento directo</strong> en combos de Baño + Peluquería o en la compra de alimentos premium seleccionados.</p>
+          <a href="shop.html" class="btn btn-secondary" style="background-color: var(--white); color: var(--primary);">Ver Ofertas</a>
+        </div>
+        <div class="offer-btn-box">
+          <span style="font-size: 5rem; line-height: 1;">🎁</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products Section -->
+  <section class="container section">
+    <div class="section-header">
+      <h2>Productos Destacados</h2>
+      <p>Consiente a tu mejor amigo con lo mejor en alimentación y salud animal.</p>
+    </div>
+    <div class="products-grid" id="featured-products-grid">
+      <!-- Loaded dynamically via JS -->
+    </div>
+  </section>
+
+  <!-- News Section -->
+  <section class="container section" style="border-top: 1px solid var(--gray-300);">
+    <div class="section-header">
+      <h2>Últimas Noticias</h2>
+      <p>Consejos y artículos de interés para el cuidado de tus mascotas.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card" style="align-items: flex-start; text-align: left; padding: 25px;">
+        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=350" alt="perro" style="width: 100%; border-radius: var(--radius-sm); margin-bottom: 20px; height: 180px; object-fit: cover;">
+        <span class="product-category">Salud</span>
+        <h3 style="font-size: 1.15rem; margin: 10px 0;">Cómo preparar a tu mascota para el hotel</h3>
+        <p style="font-size: 0.9rem;">El hospedaje puede generar ansiedad. Descubre cómo una visita previa a la guardería y traer sus juguetes preferidos ayuda a su adaptación.</p>
+        <a href="nosotros.html" class="btn-link" style="font-weight: 700; color: var(--primary);">Leer más &rarr;</a>
+      </div>
+      <div class="service-card" style="align-items: flex-start; text-align: left; padding: 25px;">
+        <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=350" alt="gato" style="width: 100%; border-radius: var(--radius-sm); margin-bottom: 20px; height: 180px; object-fit: cover;">
+        <span class="product-category">Alimentación</span>
+        <h3 style="font-size: 1.15rem; margin: 10px 0;">La importancia de la hidratación felina</h3>
+        <p style="font-size: 0.9rem;">Los gatos suelen tomar poca agua. Te mostramos cómo el alimento húmedo y el uso de bebederos automáticos previenen problemas renales.</p>
+        <a href="nosotros.html" class="btn-link" style="font-weight: 700; color: var(--primary);">Leer más &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo">🐾 Pet<span>Center</span></div>
+        <p>Pensamos en la salud y el bienestar integral de tu mascota. Visítanos o haz tu pedido en línea hoy mismo.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Servicios</h3>
+        <ul>
+          <li><a href="reservas.html?servicio=hotel">Hotel Pet</a></li>
+          <li><a href="reservas.html?servicio=banos">Baños & Spa</a></li>
+          <li><a href="reservas.html?servicio=peluqueria">Peluquería Canina</a></li>
+          <li><a href="reservas.html?servicio=guarderia">Guardería & Piscina</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Tienda</h3>
+        <ul>
+          <li><a href="shop.html?cat=alimentos">Alimentos</a></li>
+          <li><a href="shop.html?cat=farmacia">Farmacia</a></li>
+          <li><a href="shop.html?cat=juguetes">Juguetes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Contacto</h3>
+        <p>📞 +591 70000000<br>
+        📧 contacto@petcenter.com<br>
+        📍 Av. Principal #123, Santa Cruz, Bolivia</p>
+      </div>
+    </div>
+    <div class="footer-bottom container">
+      <p>&copy; 2026 PetCenter. Todos los derechos reservados. Creado con 🧡 para tus mejores amigos.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="supabase-n8n.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Load and render a few featured products on home page
+    async function loadFeaturedProducts() {
+      const grid = document.getElementById('featured-products-grid');
+      if (!grid) return;
+      
+      grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">Cargando productos destacados...</p>';
+      
+      const products = await fetchProducts();
+      // Select first 4 products
+      const featured = products.slice(0, 4);
+      
+      grid.innerHTML = '';
+      featured.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div class="product-img">
+            <img src="${product.imagen_url}" alt="${product.nombre}">
+            ${product.stock < 10 ? `<span class="product-badge">Pocas Unidades</span>` : ''}
+          </div>
+          <div class="product-info">
+            <span class="product-category">${product.categoria}</span>
+            <h3 class="product-title">${product.nombre}</h3>
+            <div class="product-meta">
+              <span class="product-price">Bs. ${Number(product.precio).toFixed(2)}</span>
+              <button class="btn-add-cart" data-id="${product.id}">🛒</button>
+            </div>
+          </div>
+        `;
+        
+        // Add event listener to the add to cart button
+        card.querySelector('.btn-add-cart').addEventListener('click', (e) => {
+          e.stopPropagation();
+          addToCart(product, 1);
+        });
+        
+        grid.appendChild(card);
+      });
+    }
+    
+    document.addEventListener('DOMContentLoaded', loadFeaturedProducts);
+  </script>
+</body>
+</html>

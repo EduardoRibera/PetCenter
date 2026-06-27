@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuración de Integración - Petshop</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">🐾</span> Pet<span>Center</span>
+      </a>
+      <button class="menu-toggle" id="menu-toggle">☰</button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="shop.html">Pet Shop</a></li>
+        <li><a href="reservas.html">Reservas</a></li>
+        <li><a href="nosotros.html">Nosotros</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="carrito.html" class="cart-icon-btn">
+          🛒 <span class="cart-badge" id="cart-badge">0</span>
+        </a>
+        <a href="config.html" class="btn-config active">
+          ⚙️ Config
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container section">
+    <div class="section-header">
+      <h2>Panel de Integración</h2>
+      <p>Configura las credenciales de Supabase y los Webhooks de n8n para habilitar la sincronización de datos y automatización en la nube.</p>
+    </div>
+
+    <div class="config-card">
+      <h2>⚙️ Ajustes de Credenciales</h2>
+      <p>Estos datos se guardarán de forma local en tu navegador (localStorage), protegiendo tus credenciales cuando subas tu código a GitHub Pages.</p>
+      
+      <form id="config-form">
+        <div class="form-group">
+          <label for="supabase-url">Supabase URL:</label>
+          <input type="text" id="supabase-url" class="form-control" placeholder="https://xxxxxx.supabase.co">
+        </div>
+        
+        <div class="form-group">
+          <label for="supabase-key">Supabase Anon Key:</label>
+          <input type="password" id="supabase-key" class="form-control" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+        </div>
+
+        <div style="margin: 30px 0; border-top: 1px solid var(--gray-300);"></div>
+        
+        <h3 style="margin-bottom: 15px; font-size: 1.1rem; color: var(--primary);">🔌 Webhooks de n8n</h3>
+        
+        <div class="form-group">
+          <label for="webhook-pedidos">Webhook Pedidos (Shop):</label>
+          <input type="text" id="webhook-pedidos" class="form-control" placeholder="https://n8n.tudominio.com/webhook/xxxx-xxxx-xxxx">
+        </div>
+        
+        <div class="form-group">
+          <label for="webhook-reservas">Webhook Reservas (Servicios):</label>
+          <input type="text" id="webhook-reservas" class="form-control" placeholder="https://n8n.tudominio.com/webhook/xxxx-xxxx-xxxx">
+        </div>
+
+        <div class="form-group">
+          <label for="webhook-contacto">Webhook Contacto (IA):</label>
+          <input type="text" id="webhook-contacto" class="form-control" placeholder="https://n8n.tudominio.com/webhook/xxxx-xxxx-xxxx">
+        </div>
+        
+        <div style="display: flex; gap: 15px; margin-top: 30px;">
+          <button type="submit" class="btn btn-primary" style="flex: 1;">💾 Guardar Credenciales</button>
+          <button type="button" id="btn-test-db" class="btn btn-outline" style="flex: 1;">⚡ Probar Supabase</button>
+        </div>
+      </form>
+      
+      <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 10px;">
+        <div>
+          <strong>Estado de Supabase:</strong> 
+          <span id="db-status" class="status-badge status-disconnected">Desconectado</span>
+        </div>
+        <div>
+          <strong>Estado de n8n:</strong> 
+          <span id="n8n-status" class="status-badge status-disconnected">Faltan Webhooks</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo">🐾 Pet<span>Center</span></div>
+        <p>Pensamos en la salud y el bienestar integral de tu mascota. Visítanos o haz tu pedido en línea hoy mismo.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Servicios</h3>
+        <ul>
+          <li><a href="reservas.html?servicio=hotel">Hotel Pet</a></li>
+          <li><a href="reservas.html?servicio=banos">Baños & Spa</a></li>
+          <li><a href="reservas.html?servicio=peluqueria">Peluquería Canina</a></li>
+          <li><a href="reservas.html?servicio=guarderia">Guardería & Piscina</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Tienda</h3>
+        <ul>
+          <li><a href="shop.html?cat=alimentos">Alimentos</a></li>
+          <li><a href="shop.html?cat=farmacia">Farmacia</a></li>
+          <li><a href="shop.html?cat=juguetes">Juguetes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Contacto</h3>
+        <p>📞 +591 70000000<br>
+        📧 contacto@petcenter.com<br>
+        📍 Av. Principal #123, Santa Cruz, Bolivia</p>
+      </div>
+    </div>
+    <div class="footer-bottom container">
+      <p>&copy; 2026 PetCenter. Todos los derechos reservados. Creado con 🧡 para tus mejores amigos.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="supabase-n8n.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Config form elements
+    const form = document.getElementById('config-form');
+    const inputUrl = document.getElementById('supabase-url');
+    const inputKey = document.getElementById('supabase-key');
+    const inputPedidos = document.getElementById('webhook-pedidos');
+    const inputReservas = document.getElementById('webhook-reservas');
+    const inputContacto = document.getElementById('webhook-contacto');
+    
+    const dbStatus = document.getElementById('db-status');
+    const n8nStatus = document.getElementById('n8n-status');
+    
+    // Load existing config on page load
+    function loadConfig() {
+      const config = getApiConfig();
+      inputUrl.value = config.supabaseUrl;
+      inputKey.value = config.supabaseKey;
+      inputPedidos.value = config.webhookPedidos;
+      inputReservas.value = config.webhookReservas;
+      inputContacto.value = config.webhookContacto;
+      
+      updateStatusBadges();
+    }
+    
+    function updateStatusBadges() {
+      const config = getApiConfig();
+      
+      // Supabase status
+      if (config.supabaseUrl && config.supabaseKey) {
+        dbStatus.textContent = 'Configurado';
+        dbStatus.className = 'status-badge status-connected';
+      } else {
+        dbStatus.textContent = 'Falta Configurar';
+        dbStatus.className = 'status-badge status-disconnected';
+      }
+      
+      // n8n webhooks status
+      if (config.webhookPedidos || config.webhookReservas || config.webhookContacto) {
+        n8nStatus.textContent = 'Activo';
+        n8nStatus.className = 'status-badge status-connected';
+      } else {
+        n8nStatus.textContent = 'Faltan Webhooks';
+        n8nStatus.className = 'status-badge status-disconnected';
+      }
+    }
+    
+    // Handle Save
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      localStorage.setItem('petshop_supabase_url', inputUrl.value.trim());
+      localStorage.setItem('petshop_supabase_key', inputKey.value.trim());
+      localStorage.setItem('petshop_webhook_pedidos', inputPedidos.value.trim());
+      localStorage.setItem('petshop_webhook_reservas', inputReservas.value.trim());
+      localStorage.setItem('petshop_webhook_contacto', inputContacto.value.trim());
+      
+      showToast('Credenciales guardadas con éxito', 'success');
+      updateStatusBadges();
+    });
+    
+    // Test Supabase Connection
+    document.getElementById('btn-test-db').addEventListener('click', async () => {
+      localStorage.setItem('petshop_supabase_url', inputUrl.value.trim());
+      localStorage.setItem('petshop_supabase_key', inputKey.value.trim());
+      
+      const config = getApiConfig();
+      if (!config.supabaseUrl || !config.supabaseKey) {
+        showToast('Completa los campos de Supabase antes de probar.', 'error');
+        return;
+      }
+      
+      showToast('Probando conexión...', 'info');
+      
+      // Re-init Supabase client
+      const initSuccess = initSupabase();
+      if (!initSuccess) {
+        showToast('Credenciales inválidas de Supabase.', 'error');
+        return;
+      }
+      
+      try {
+        // Try fetching a single row from 'productos'
+        const { data, error } = await supabaseClient
+          .from('productos')
+          .select('count', { count: 'exact', head: true });
+          
+        if (error) {
+          showToast(`Error al leer tabla "productos": ${error.message}`, 'error');
+          console.error(error);
+        } else {
+          showToast('Conexión con Supabase Exitosa! Tabla "productos" leída.', 'success');
+          dbStatus.textContent = 'Conectado';
+          dbStatus.className = 'status-badge status-connected';
+        }
+      } catch (err) {
+        showToast(`Error en la petición: ${err.message}`, 'error');
+        console.error(err);
+      }
+    });
+    
+    window.addEventListener('DOMContentLoaded', loadConfig);
+  </script>
+</body>
+</html>

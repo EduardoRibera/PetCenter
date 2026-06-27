@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reservar Servicios - Petshop</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">🐾</span> Pet<span>Center</span>
+      </a>
+      <button class="menu-toggle" id="menu-toggle">☰</button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="shop.html">Pet Shop</a></li>
+        <li><a href="reservas.html" class="active">Reservas</a></li>
+        <li><a href="nosotros.html">Nosotros</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="carrito.html" class="cart-icon-btn">
+          🛒 <span class="cart-badge" id="cart-badge">0</span>
+        </a>
+        <a href="config.html" class="btn-config">
+          ⚙️ Config
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Title section -->
+  <main class="container section" style="padding-top: 50px;">
+    <div class="section-header">
+      <h2>Reservar Servicios</h2>
+      <p>Agenda con anticipación el cuidado, hospedaje o revisión médica de tu mascota. Cotización en tiempo real.</p>
+    </div>
+
+    <!-- Booking Layout -->
+    <form id="booking-form">
+      <div class="booking-layout">
+        
+        <!-- Left Column: Form Main -->
+        <div class="booking-form-main">
+          
+          <!-- Step 1: Service Selection -->
+          <div class="booking-card" style="margin-bottom: 25px;">
+            <h3 class="booking-card-title">🛁 1. Selecciona el Servicio</h3>
+            <div class="service-selector">
+              <div class="service-opt active" data-service="banos" data-price="50">
+                <span class="opt-icon">🛁</span>
+                <span>Baños & Spa</span>
+              </div>
+              <div class="service-opt" data-service="peluqueria" data-price="70">
+                <span class="opt-icon">✂️</span>
+                <span>Peluquería</span>
+              </div>
+              <div class="service-opt" data-service="hotel" data-price="80">
+                <span class="opt-icon">🏨</span>
+                <span>Hotel Pet</span>
+              </div>
+              <div class="service-opt" data-service="guarderia" data-price="40">
+                <span class="opt-icon">🏊</span>
+                <span>Guardería</span>
+              </div>
+              <div class="service-opt" data-service="veterinaria" data-price="80">
+                <span class="opt-icon">🏥</span>
+                <span>Veterinaria</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Personal Details & Pet Details -->
+          <div class="booking-card" style="margin-bottom: 25px;">
+            <h3 class="booking-card-title">📋 2. Datos Personales y de tu Mascota</h3>
+            
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label for="client-name">Nombre Completo: <span>*</span></label>
+                <input type="text" id="client-name" class="form-control" required placeholder="Ej. Eduardo Pérez">
+              </div>
+              
+              <div class="form-group">
+                <label for="client-email">Correo Electrónico: <span>*</span></label>
+                <input type="email" id="client-email" class="form-control" required placeholder="Ej. eduardo@gmail.com">
+              </div>
+
+              <div class="form-group">
+                <label for="client-phone">Número de WhatsApp: <span>*</span></label>
+                <input type="tel" id="client-phone" class="form-control" required placeholder="Ej. 70000000">
+              </div>
+
+              <div class="form-group">
+                <label for="pet-name">Nombre de tu Mascota: <span>*</span></label>
+                <input type="text" id="pet-name" class="form-control" required placeholder="Ej. Rocky">
+              </div>
+              
+              <div class="form-group">
+                <label for="pet-type">Tipo de Mascota: <span>*</span></label>
+                <select id="pet-type" class="form-control" required>
+                  <option value="perros">Perro</option>
+                  <option value="gatos">Gato</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Appointment Details -->
+          <div class="booking-card">
+            <h3 class="booking-card-title">📅 3. Detalles del Turno</h3>
+            
+            <div class="form-grid">
+              <!-- Common Date & Time (Show for Vet, Bath, Grooming) -->
+              <div class="form-group" id="group-date">
+                <label for="booking-date">Fecha de la Cita: <span>*</span></label>
+                <input type="date" id="booking-date" class="form-control" required>
+              </div>
+              
+              <div class="form-group" id="group-time">
+                <label for="booking-time">Hora: <span>*</span></label>
+                <select id="booking-time" class="form-control">
+                  <option value="09:00">09:00 AM</option>
+                  <option value="10:30">10:30 AM</option>
+                  <option value="12:00">12:00 PM</option>
+                  <option value="14:30">02:30 PM</option>
+                  <option value="16:00">04:00 PM</option>
+                  <option value="17:30">05:30 PM</option>
+                </select>
+              </div>
+
+              <!-- Hotel Dates (Only show for Hotel/Guarderia) -->
+              <div class="form-group" id="group-start-date" style="display: none;">
+                <label for="hotel-start">Fecha de Ingreso (Check-in): <span>*</span></label>
+                <input type="date" id="hotel-start" class="form-control">
+              </div>
+              
+              <div class="form-group" id="group-end-date" style="display: none;">
+                <label for="hotel-end">Fecha de Salida (Check-out): <span>*</span></label>
+                <input type="date" id="hotel-end" class="form-control">
+              </div>
+
+              <!-- Size Selection (Only show for Baths and Peluqueria) -->
+              <div class="form-group" id="group-pet-size">
+                <label for="pet-size">Tamaño/Peso del Perro: <span>*</span></label>
+                <select id="pet-size" class="form-control">
+                  <option value="pequeno" data-add="0">Pequeño (Menos de 10 kg) - Sin recargo</option>
+                  <option value="mediano" data-add="20">Mediano (10 - 22 kg) - +Bs. 20.00</option>
+                  <option value="grande" data-add="50">Grande (22 - 40 kg) - +Bs. 50.00</option>
+                  <option value="gigante" data-add="80">Gigante (Más de 40 kg) - +Bs. 80.00</option>
+                </select>
+              </div>
+
+              <!-- Extra Options -->
+              <div class="form-group" id="group-options">
+                <label for="service-addons">Adicionales / Tratamientos:</label>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;" id="addons-checkboxes">
+                  <!-- Checkboxes loaded dynamically by JS -->
+                </div>
+              </div>
+              
+              <div class="form-group full-width">
+                <label for="booking-notes">Notas Especiales o Alergias:</label>
+                <textarea id="booking-notes" class="form-control" placeholder="Ej. Mi perro es un poco nervioso con el secador, o es alérgico a ciertos shampoos."></textarea>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Summary Sidebar -->
+        <div class="booking-summary-sidebar">
+          <div class="summary-sticky-card">
+            <h3>Resumen de Reserva</h3>
+            <div class="summary-divider"></div>
+            
+            <div class="summary-details">
+              <div class="summary-item">
+                <span class="summary-label">Servicio:</span>
+                <span class="summary-value" id="summary-service">Baños & Spa</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Mascota:</span>
+                <span class="summary-value" id="summary-pet">-</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Fecha/Hora:</span>
+                <span class="summary-value" id="summary-datetime">-</span>
+              </div>
+              <div class="summary-item" id="summary-addons-row" style="display: none;">
+                <span class="summary-label">Adicionales:</span>
+                <span class="summary-value" id="summary-addons">-</span>
+              </div>
+            </div>
+            
+            <div class="summary-divider"></div>
+            
+            <div class="price-estimator-sidebar">
+              <div class="price-title">Precio Estimado</div>
+              <div class="price-desc" id="price-basis">Servicio de Baño & Spa</div>
+              <div class="price-amount">Bs. <span id="estimated-total">50.00</span></div>
+            </div>
+            
+            <button type="submit" class="btn btn-secondary btn-confirm-booking">
+              📅 Confirmar Reserva de Cita
+            </button>
+            <p class="summary-note">Al hacer clic en Confirmar, enviaremos la solicitud de tu reserva para su aprobación.</p>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo">🐾 Pet<span>Center</span></div>
+        <p>Pensamos en la salud y el bienestar integral de tu mascota. Visítanos o haz tu pedido en línea hoy mismo.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Servicios</h3>
+        <ul>
+          <li><a href="reservas.html?servicio=hotel">Hotel Pet</a></li>
+          <li><a href="reservas.html?servicio=banos">Baños & Spa</a></li>
+          <li><a href="reservas.html?servicio=peluqueria">Peluquería Canina</a></li>
+          <li><a href="reservas.html?servicio=guarderia">Guardería & Piscina</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Tienda</h3>
+        <ul>
+          <li><a href="shop.html?cat=alimentos">Alimentos</a></li>
+          <li><a href="shop.html?cat=farmacia">Farmacia</a></li>
+          <li><a href="shop.html?cat=juguetes">Juguetes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Contacto</h3>
+        <p>📞 +591 70000000<br>
+        📧 contacto@petcenter.com<br>
+        📍 Av. Principal #123, Santa Cruz, Bolivia</p>
+      </div>
+    </div>
+    <div class="footer-bottom container">
+      <p>&copy; 2026 PetCenter. Todos los derechos reservados. Creado con 🧡 para tus mejores amigos.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="supabase-n8n.js"></script>
+  <script src="app.js"></script>
+  <script>
+    let activeService = 'banos';
+    let basePrice = 50;
+    
+    // Elements
+    const form = document.getElementById('booking-form');
+    const serviceOpts = document.querySelectorAll('.service-opt');
+    const estimatedTotal = document.getElementById('estimated-total');
+    const priceBasis = document.getElementById('price-basis');
+    
+    // Conditional Groups
+    const groupDate = document.getElementById('group-date');
+    const groupTime = document.getElementById('group-time');
+    const groupStartDate = document.getElementById('group-start-date');
+    const groupEndDate = document.getElementById('group-end-date');
+    const groupPetSize = document.getElementById('group-pet-size');
+    const groupOptions = document.getElementById('group-options');
+    const addonsCheckboxes = document.getElementById('addons-checkboxes');
+    const petTypeSelect = document.getElementById('pet-type');
+    const petSizeSelect = document.getElementById('pet-size');
+    
+    // Set min date of inputs to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('booking-date').min = today;
+    document.getElementById('hotel-start').min = today;
+    document.getElementById('hotel-end').min = today;
+    
+    // Update booking summary sidebar
+    function updateSummary() {
+      const petName = document.getElementById('pet-name').value || '-';
+      const petType = petTypeSelect.value === 'perros' ? 'Perro' : 'Gato';
+      document.getElementById('summary-pet').textContent = `${petName} (${petType})`;
+      
+      const activeOpt = document.querySelector(`.service-opt[data-service="${activeService}"]`);
+      if (activeOpt) {
+        const serviceName = activeOpt.querySelector('span:not(.opt-icon)').textContent;
+        document.getElementById('summary-service').textContent = serviceName;
+      }
+      
+      let dateTimeText = '-';
+      if (activeService === 'hotel' || activeService === 'guarderia') {
+        const start = document.getElementById('hotel-start').value;
+        const end = document.getElementById('hotel-end').value;
+        if (start && end) {
+          dateTimeText = `${start} al ${end}`;
+        } else if (start) {
+          dateTimeText = `Desde ${start}`;
+        }
+      } else {
+        const date = document.getElementById('booking-date').value;
+        const time = document.getElementById('booking-time').value;
+        if (date) {
+          dateTimeText = `${date} ${time}`;
+        }
+      }
+      document.getElementById('summary-datetime').textContent = dateTimeText;
+      
+      // Addons summary
+      const selectedAddons = [];
+      document.querySelectorAll('.addon-check:checked').forEach(cb => {
+        const labelText = cb.parentNode.textContent.trim().split('(+')[0].trim();
+        selectedAddons.push(labelText);
+      });
+      
+      const addonsRow = document.getElementById('summary-addons-row');
+      if (selectedAddons.length > 0) {
+        addonsRow.style.display = 'flex';
+        document.getElementById('summary-addons').textContent = selectedAddons.join(', ');
+      } else {
+        addonsRow.style.display = 'none';
+      }
+    }
+
+    // Handle query parameters in URL
+    function handleQueryParams() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const serv = urlParams.get('servicio');
+      if (serv) {
+        const opt = document.querySelector(`.service-opt[data-service="${serv}"]`);
+        if (opt) {
+          triggerServiceChange(opt);
+        }
+      }
+    }
+    
+    // Setup Service Selector clicks
+    serviceOpts.forEach(opt => {
+      opt.addEventListener('click', () => triggerServiceChange(opt));
+    });
+    
+    function triggerServiceChange(element) {
+      serviceOpts.forEach(o => o.classList.remove('active'));
+      element.classList.add('active');
+      activeService = element.getAttribute('data-service');
+      basePrice = Number(element.getAttribute('data-price'));
+      
+      adjustFormFields();
+      calculateTotal();
+      updateSummary();
+    }
+    
+    // Show/Hide fields based on service selection
+    function adjustFormFields() {
+      // Hide all conditional inputs
+      groupDate.style.display = 'none';
+      groupTime.style.display = 'none';
+      groupStartDate.style.display = 'none';
+      groupEndDate.style.display = 'none';
+      groupPetSize.style.display = 'none';
+      groupOptions.style.display = 'none';
+      
+      // Remove required attributes from non-visible date fields
+      document.getElementById('booking-date').required = false;
+      document.getElementById('hotel-start').required = false;
+      document.getElementById('hotel-end').required = false;
+      
+      if (activeService === 'banos' || activeService === 'peluqueria') {
+        groupDate.style.display = 'block';
+        groupTime.style.display = 'block';
+        groupPetSize.style.display = 'block';
+        groupOptions.style.display = 'block';
+        document.getElementById('booking-date').required = true;
+        
+        // Show correct checkboxes
+        addonsCheckboxes.innerHTML = `
+          <label class="filter-label">
+            <input type="checkbox" class="addon-check" value="medicado" data-price="20"> Baño Medicado (+Bs. 20.00)
+          </label>
+          <label class="filter-label">
+            <input type="checkbox" class="addon-check" value="vip" data-price="30"> Estilismo VIP & Perfumado (+Bs. 30.00)
+          </label>
+        `;
+      } else if (activeService === 'hotel') {
+        groupStartDate.style.display = 'block';
+        groupEndDate.style.display = 'block';
+        document.getElementById('hotel-start').required = true;
+        document.getElementById('hotel-end').required = true;
+      } else if (activeService === 'guarderia') {
+        groupStartDate.style.display = 'block';
+        groupEndDate.style.display = 'block';
+        groupOptions.style.display = 'block';
+        document.getElementById('hotel-start').required = true;
+        document.getElementById('hotel-end').required = true;
+        
+        // Show correct checkboxes for daycare
+        addonsCheckboxes.innerHTML = `
+          <label class="filter-label">
+            <input type="checkbox" class="addon-check" value="piscina" data-price="20"> Acceso a Piscina Recreativa (+Bs. 20.00 / día)
+          </label>
+          <label class="filter-label">
+            <input type="checkbox" class="addon-check" value="banogratis" data-price="0"> Baño Gratis de salida (Estadías > 5 días)
+          </label>
+        `;
+      } else if (activeService === 'veterinaria') {
+        groupDate.style.display = 'block';
+        groupTime.style.display = 'block';
+        groupOptions.style.display = 'block';
+        document.getElementById('booking-date').required = true;
+        
+        addonsCheckboxes.innerHTML = `
+          <label class="filter-label">
+            <input type="checkbox" class="addon-check" value="ecografia" data-price="70"> Agregar Ecografía (+Bs. 70.00)
+          </label>
+        `;
+      }
+      
+      // Bind event listeners to newly generated checkboxes
+      document.querySelectorAll('.addon-check').forEach(cb => {
+        cb.addEventListener('change', () => {
+          calculateTotal();
+          updateSummary();
+        });
+      });
+    }
+    
+    // Realtime estimated price calculation
+    function calculateTotal() {
+      let total = basePrice;
+      let basisText = '';
+      
+      if (activeService === 'banos' || activeService === 'peluqueria') {
+        // Size surcharge (only for dogs)
+        const isDog = petTypeSelect.value === 'perros';
+        if (isDog) {
+          const sizeOpt = petSizeSelect.options[petSizeSelect.selectedIndex];
+          const sizeAdd = Number(sizeOpt.getAttribute('data-add') || 0);
+          total += sizeAdd;
+          basisText = `Servicio de ${activeService === 'banos' ? 'Baño' : 'Pelo'} para Perro ${sizeOpt.text.split('(')[0].trim()}`;
+        } else {
+          basisText = `Servicio de ${activeService === 'banos' ? 'Baño' : 'Pelo'} para Gato (Precio Fijo)`;
+        }
+        
+        // Addons
+        document.querySelectorAll('.addon-check:checked').forEach(cb => {
+          total += Number(cb.getAttribute('data-price'));
+        });
+        
+      } else if (activeService === 'hotel') {
+        // Daily rate based on animal
+        const isCat = petTypeSelect.value === 'gatos';
+        const ratePerDay = isCat ? 60 : 80;
+        
+        const start = new Date(document.getElementById('hotel-start').value);
+        const end = new Date(document.getElementById('hotel-end').value);
+        
+        let days = 1;
+        if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
+          const diffTime = Math.abs(end - start);
+          days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          if (days === 0) days = 1;
+        }
+        
+        total = ratePerDay * days;
+        basisText = `Hospedaje de ${isCat ? 'Gato' : 'Perro'} x ${days} día(s) (Bs. ${ratePerDay}/día)`;
+        
+      } else if (activeService === 'guarderia') {
+        const ratePerDay = basePrice; // 40
+        const start = new Date(document.getElementById('hotel-start').value);
+        const end = new Date(document.getElementById('hotel-end').value);
+        
+        let days = 1;
+        if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
+          const diffTime = Math.abs(end - start);
+          days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          if (days === 0) days = 1;
+        }
+        
+        let dailyAddons = 0;
+        document.querySelectorAll('.addon-check:checked').forEach(cb => {
+          dailyAddons += Number(cb.getAttribute('data-price'));
+        });
+        
+        total = (ratePerDay + dailyAddons) * days;
+        basisText = `Guardería x ${days} día(s) (Bs. ${ratePerDay + dailyAddons}/día)`;
+        
+      } else if (activeService === 'veterinaria') {
+        basisText = 'Consulta Médica General';
+        document.querySelectorAll('.addon-check:checked').forEach(cb => {
+          total += Number(cb.getAttribute('data-price'));
+          if (cb.value === 'ecografia') {
+            basisText = 'Consulta Veterinaria + Ecografía';
+          }
+        });
+      }
+      
+      estimatedTotal.textContent = total.toFixed(2);
+      priceBasis.textContent = basisText;
+    }
+    
+    // Bind listeners to trigger calculations and update summary in real-time
+    petTypeSelect.addEventListener('change', () => {
+      // Toggle size dropdown based on pet type (only relevant for dogs)
+      if (petTypeSelect.value === 'gatos') {
+        groupPetSize.style.opacity = '0.5';
+        petSizeSelect.disabled = true;
+      } else {
+        groupPetSize.style.opacity = '1';
+        petSizeSelect.disabled = false;
+      }
+      calculateTotal();
+      updateSummary();
+    });
+    
+    petSizeSelect.addEventListener('change', () => {
+      calculateTotal();
+      updateSummary();
+    });
+    
+    document.getElementById('pet-name').addEventListener('input', updateSummary);
+    document.getElementById('booking-date').addEventListener('change', () => {
+      calculateTotal();
+      updateSummary();
+    });
+    document.getElementById('booking-time').addEventListener('change', () => {
+      calculateTotal();
+      updateSummary();
+    });
+    document.getElementById('hotel-start').addEventListener('change', () => {
+      calculateTotal();
+      updateSummary();
+    });
+    document.getElementById('hotel-end').addEventListener('change', () => {
+      calculateTotal();
+      updateSummary();
+    });
+    
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const config = getApiConfig();
+      if (!config.webhookReservas) {
+        showToast('Error: Webhook de reservas de n8n no configurado. Ve al botón de Config en el menú.', 'error');
+        return;
+      }
+      
+      // Collect selected addons
+      const addons = [];
+      document.querySelectorAll('.addon-check:checked').forEach(cb => {
+        addons.push(cb.value);
+      });
+      
+      const payload = {
+        cliente_nombre: document.getElementById('client-name').value,
+        cliente_email: document.getElementById('client-email').value,
+        cliente_telefono: document.getElementById('client-phone').value,
+        mascota_name: document.getElementById('pet-name').value,
+        mascota_tipo: petTypeSelect.value,
+        servicio: activeService,
+        fecha_inicio: activeService === 'hotel' || activeService === 'guarderia' 
+          ? document.getElementById('hotel-start').value 
+          : document.getElementById('booking-date').value,
+        fecha_fin: activeService === 'hotel' || activeService === 'guarderia'
+          ? document.getElementById('hotel-end').value
+          : null,
+        hora: activeService !== 'hotel' && activeService !== 'guarderia'
+          ? document.getElementById('booking-time').value
+          : null,
+        detalles: {
+          addons: addons,
+          tamano: petTypeSelect.value === 'perros' ? petSizeSelect.value : 'N/A',
+          notas: document.getElementById('booking-notes').value
+        },
+        precio_estimado: Number(estimatedTotal.textContent)
+      };
+      
+      showToast('Enviando reserva a n8n...', 'info');
+      
+      const success = await submitReserva(payload);
+      if (success) {
+        showToast('¡Reserva Enviada! n8n procesará tu cita y te enviará un WhatsApp/Gmail.', 'success');
+        form.reset();
+        triggerServiceChange(document.querySelector('.service-opt[data-service="banos"]'));
+        updateSummary();
+      }
+    });
+    
+    // Init page
+    document.addEventListener('DOMContentLoaded', () => {
+      adjustFormFields();
+      handleQueryParams();
+      calculateTotal();
+    });
+  </script>
+</body>
+</html>

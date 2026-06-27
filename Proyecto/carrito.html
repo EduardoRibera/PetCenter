@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito de Compras - Petshop</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">🐾</span> Pet<span>Center</span>
+      </a>
+      <button class="menu-toggle" id="menu-toggle">☰</button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="shop.html">Pet Shop</a></li>
+        <li><a href="reservas.html">Reservas</a></li>
+        <li><a href="nosotros.html">Nosotros</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="carrito.html" class="cart-icon-btn active">
+          🛒 <span class="cart-badge" id="cart-badge">0</span>
+        </a>
+        <a href="config.html" class="btn-config">
+          ⚙️ Config
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Section -->
+  <main class="container section" style="padding-top: 50px;">
+    <div class="section-header" style="margin-bottom: 40px;">
+      <h2>Tu Carrito de Compras</h2>
+      <p>Revisa tus artículos de pet shop y completa tus datos de entrega para procesar el pedido.</p>
+    </div>
+
+    <!-- Empty Cart State -->
+    <div class="empty-cart-state" id="empty-cart" style="display: none;">
+      <div class="empty-cart-icon">🛒</div>
+      <h3>Tu carrito está vacío</h3>
+      <p style="color: var(--dark-light); margin: 10px 0 25px;">Explora nuestra tienda para añadir alimentos, juguetes o medicamentos.</p>
+      <a href="shop.html" class="btn btn-primary">🛍️ Volver a la Tienda</a>
+    </div>
+
+    <!-- Cart Content Layout -->
+    <div class="cart-layout" id="cart-content">
+      
+      <!-- Cart Items Table -->
+      <div class="cart-items-box">
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Precio</th>
+              <th>Cantidad</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="cart-rows">
+            <!-- Dynamic Cart Rows -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Summary & Checkout Form -->
+      <div>
+        <div class="cart-summary-card">
+          <h3 class="cart-summary-title">Resumen de Compra</h3>
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>Bs. <span id="sum-subtotal">0.00</span></span>
+          </div>
+          <div class="summary-row">
+            <span>Costo de Delivery</span>
+            <span id="sum-shipping">Bs. 15.00</span>
+          </div>
+          <div class="summary-row summary-total">
+            <span>Total</span>
+            <span>Bs. <span id="sum-total">0.00</span></span>
+          </div>
+          
+          <h3 class="cart-summary-title" style="margin-top: 30px;">🚚 Datos de Entrega</h3>
+          <form id="checkout-form">
+            <div class="form-group">
+              <label for="checkout-name">Nombre Completo: <span>*</span></label>
+              <input type="text" id="checkout-name" class="form-control" required placeholder="Ej. Eduardo Pérez">
+            </div>
+            
+            <div class="form-group">
+              <label for="checkout-email">Correo Electrónico: <span>*</span></label>
+              <input type="email" id="checkout-email" class="form-control" required placeholder="Ej. cliente@correo.com">
+            </div>
+            
+            <div class="form-group">
+              <label for="checkout-phone">Número de WhatsApp: <span>*</span></label>
+              <input type="tel" id="checkout-phone" class="form-control" required placeholder="Ej. 70000000">
+            </div>
+            
+            <div class="form-group">
+              <label for="checkout-address">Dirección de Entrega: <span>*</span></label>
+              <input type="text" id="checkout-address" class="form-control" required placeholder="Ej. Av. Cristo Redentor, Calle 3 #45">
+            </div>
+
+            <div class="form-group">
+              <label for="checkout-payment">Método de Pago: <span>*</span></label>
+              <select id="checkout-payment" class="form-control" required>
+                <option value="efectivo">Efectivo al Recibir</option>
+                <option value="transferencia">Transferencia Bancaria</option>
+                <option value="qr">Pago Simple QR</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="checkout-notes">Instrucciones Adicionales:</label>
+              <textarea id="checkout-notes" class="form-control" placeholder="Ej. Tocar timbre portón azul o llamar antes de salir."></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-secondary" style="width: 100%; margin-top: 15px; font-size: 1.1rem; padding: 15px;">🛍️ Confirmar Pedido (WhatsApp & n8n)</button>
+          </form>
+        </div>
+      </div>
+      
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo">🐾 Pet<span>Center</span></div>
+        <p>Pensamos en la salud y el bienestar integral de tu mascota. Visítanos o haz tu pedido en línea hoy mismo.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Servicios</h3>
+        <ul>
+          <li><a href="reservas.html?servicio=hotel">Hotel Pet</a></li>
+          <li><a href="reservas.html?servicio=banos">Baños & Spa</a></li>
+          <li><a href="reservas.html?servicio=peluqueria">Peluquería Canina</a></li>
+          <li><a href="reservas.html?servicio=guarderia">Guardería & Piscina</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Tienda</h3>
+        <ul>
+          <li><a href="shop.html?cat=alimentos">Alimentos</a></li>
+          <li><a href="shop.html?cat=farmacia">Farmacia</a></li>
+          <li><a href="shop.html?cat=juguetes">Juguetes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Contacto</h3>
+        <p>📞 +591 70000000<br>
+        📧 contacto@petcenter.com<br>
+        📍 Av. Principal #123, Santa Cruz, Bolivia</p>
+      </div>
+    </div>
+    <div class="footer-bottom container">
+      <p>&copy; 2026 PetCenter. Todos los derechos reservados. Creado con 🧡 para tus mejores amigos.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="supabase-n8n.js"></script>
+  <script src="app.js"></script>
+  <script>
+    const emptyState = document.getElementById('empty-cart');
+    const cartContent = document.getElementById('cart-content');
+    const cartRows = document.getElementById('cart-rows');
+    const sumSubtotal = document.getElementById('sum-subtotal');
+    const sumShipping = document.getElementById('sum-shipping');
+    const sumTotal = document.getElementById('sum-total');
+    const checkoutForm = document.getElementById('checkout-form');
+    
+    // Render the shopping cart
+    function renderCart() {
+      const cart = getCart();
+      
+      if (cart.length === 0) {
+        emptyState.style.display = 'block';
+        cartContent.style.display = 'none';
+        return;
+      }
+      
+      emptyState.style.display = 'none';
+      cartContent.style.display = 'grid';
+      
+      cartRows.innerHTML = '';
+      let subtotal = 0;
+      
+      cart.forEach(item => {
+        const rowTotal = item.precio * item.quantity;
+        subtotal += rowTotal;
+        
+        const tr = document.createElement('tr');
+        tr.className = 'cart-row';
+        tr.innerHTML = `
+          <td>
+            <div class="cart-product">
+              <img src="${item.imagen_url}" alt="${item.nombre}" class="cart-product-img">
+              <div>
+                <div class="cart-product-name">${item.nombre}</div>
+                <div class="cart-product-meta">${item.categoria}</div>
+              </div>
+            </div>
+          </td>
+          <td class="cart-price-cell">Bs. ${Number(item.precio).toFixed(2)}</td>
+          <td>
+            <div class="qty-control">
+              <button class="qty-btn btn-minus">&minus;</button>
+              <div class="qty-val">${item.quantity}</div>
+              <button class="qty-btn btn-plus">&plus;</button>
+            </div>
+          </td>
+          <td class="cart-price-cell" style="font-weight: 800; color: var(--primary);">Bs. ${rowTotal.toFixed(2)}</td>
+          <td>
+            <button class="cart-delete-btn">🗑️</button>
+          </td>
+        `;
+        
+        // Add events
+        tr.querySelector('.btn-minus').addEventListener('click', () => {
+          updateCartItemQuantity(item.id, item.quantity - 1);
+          renderCart();
+        });
+        
+        tr.querySelector('.btn-plus').addEventListener('click', () => {
+          updateCartItemQuantity(item.id, item.quantity + 1);
+          renderCart();
+        });
+        
+        tr.querySelector('.cart-delete-btn').addEventListener('click', () => {
+          removeFromCart(item.id);
+          renderCart();
+          showToast('Producto eliminado del carrito', 'info');
+        });
+        
+        cartRows.appendChild(tr);
+      });
+      
+      // Calculate delivery and total
+      // Free shipping above Bs. 200
+      const shippingCost = subtotal > 200 ? 0 : 15;
+      const total = subtotal + shippingCost;
+      
+      sumSubtotal.textContent = subtotal.toFixed(2);
+      sumShipping.textContent = shippingCost === 0 ? 'Gratis' : `Bs. ${shippingCost.toFixed(2)}`;
+      sumTotal.textContent = total.toFixed(2);
+    }
+    
+    // Checkout Submit
+    checkoutForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const config = getApiConfig();
+      if (!config.webhookPedidos) {
+        showToast('Error: Webhook de pedidos de n8n no configurado. Ve a Config en la navegación.', 'error');
+        return;
+      }
+      
+      const cart = getCart();
+      if (cart.length === 0) {
+        showToast('El carrito está vacío.', 'error');
+        return;
+      }
+      
+      const totalVal = Number(sumTotal.textContent);
+      
+      const payload = {
+        cliente_nombre: document.getElementById('checkout-name').value,
+        cliente_email: document.getElementById('checkout-email').value,
+        cliente_telefono: document.getElementById('checkout-phone').value,
+        cliente_direccion: document.getElementById('checkout-address').value,
+        metodo_pago: document.getElementById('checkout-payment').value,
+        notas: document.getElementById('checkout-notes').value,
+        items: cart, // Envia lista de productos en formato JSON
+        total: totalVal
+      };
+      
+      showToast('Enviando tu pedido a n8n...', 'info');
+      
+      const success = await submitPedido(payload);
+      if (success) {
+        showToast('¡Pedido Realizado con éxito! Limpiando carrito...', 'success');
+        clearCart();
+        
+        // Render success state
+        emptyState.style.display = 'block';
+        emptyState.innerHTML = `
+          <div class="empty-cart-icon" style="color: var(--success);">✅</div>
+          <h3>¡Muchas gracias por tu pedido!</h3>
+          <p style="color: var(--dark-light); margin: 10px 0 25px; max-width: 450px; margin-left: auto; margin-right: auto;">
+            Tu pedido ha sido recibido y está siendo procesado por nuestras automatizaciones de n8n. Recibirás una confirmación por WhatsApp/Gmail a la brevedad.
+          </p>
+          <a href="shop.html" class="btn btn-primary">🛍️ Volver a la Tienda</a>
+        `;
+        cartContent.style.display = 'none';
+      }
+    });
+    
+    document.addEventListener('DOMContentLoaded', renderCart);
+  </script>
+</body>
+</html>
