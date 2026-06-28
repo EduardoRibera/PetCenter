@@ -188,22 +188,15 @@
                 "conditions": [
                   {
                     "leftValue": "={{ $json.servicio }}",
-                    "rightValue": "hotel",
+                    "rightValue": "^(hotel|guarderia)$",
                     "operator": {
                       "type": "string",
-                      "operation": "equals"
-                    }
-                  },
-                  {
-                    "leftValue": "={{ $json.servicio }}",
-                    "rightValue": "guarderia",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
+                      "operation": "regex"
+                    },
+                    "id": "5f187cb9-a48c-450d-bfb4-a7b004984bb4"
                   }
                 ],
-                "combinator": "or"
+                "combinator": "and"
               },
               "renameOutput": true,
               "outputKey": "Hoteleria y Guarderia"
@@ -218,19 +211,12 @@
                 },
                 "conditions": [
                   {
+                    "id": "d9908b7c-e2c5-44d1-b2cc-b36b7a9d75af",
                     "leftValue": "={{ $json.servicio }}",
-                    "rightValue": "hotel",
+                    "rightValue": "^(hotel|guarderia)$",
                     "operator": {
                       "type": "string",
-                      "operation": "notEquals"
-                    }
-                  },
-                  {
-                    "leftValue": "={{ $json.servicio }}",
-                    "rightValue": "guarderia",
-                    "operator": {
-                      "type": "string",
-                      "operation": "notEquals"
+                      "operation": "notRegex"
                     }
                   }
                 ],
@@ -293,8 +279,8 @@
         "start": "={{ $('Edit Fields').item.json['Check-In'] }}T{{ $('Edit Fields').item.json['Hora'] }}:00",
         "end": "={{ (() => { const parts = $('Edit Fields').item.json['Hora'].split(':'); let h = parseInt(parts[0]) + 1; return $('Edit Fields').item.json['Check-In'] + 'T' + (h < 10 ? '0' + h : h) + ':' + parts[1] + ':00'; })() }}",
         "additionalFields": {
-          "description": "=Mascota: {{ $('Edit Fields').item.json.Mascota }} ({{ $('Edit Fields').item.json.Especie }}) \nCliente: {{ $('Edit Fields').item.json.Cliente }}\nWhatsApp: {{ $('Edit Fields').item.json.Celular }}\nEmail: {{ $('Edit Fields').item.json.Email }}\nTamaño del Perro: {{ $('Webhook').item.json.body.detalles.tamano }}\nAdicionales: {{ ($('Webhook').item.json.body.detalles.addons || []).join(', ') }}\nNotas: {{ $('Edit Fields').item.json.Notas }}",
-          "summary": "=Reserva de {{ $('Edit Fields').item.json.Servicio.toUpperCase() }}: {{ $('Edit Fields').item.json.Mascota }} ({{ $('Edit Fields').item.json.Cliente }})"
+          "description": "=Mascota: {{ $('Edit Fields').item.json.Mascota }} ({{ $('Edit Fields').item.json.Especie }}) \nCliente: {{ $('Edit Fields').item.json.Cliente }}\nWhatsApp: {{ $('Edit Fields').item.json.Celular }}\nEmail: {{ $('Edit Fields').item.json.Email }}\nTamaño del Perro: {{ $('Webhook').item.json.body.detalles.tamano }}\nAdicionales: {{ $('Webhook').item.json.body.detalles.addons.join(', ') }}\nNotas: {{ $('Edit Fields').item.json.Notas }}",
+          "summary": "=Reserva Hospedaje/Guardería ({{ $('Edit Fields').item.json.Servicio }}): {{ $('Edit Fields').item.json.Mascota }} ({{ $('Edit Fields').item.json.Cliente }})"
         }
       },
       "type": "n8n-nodes-base.googleCalendar",
@@ -482,7 +468,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "5e2fbdd8-71d0-4fea-bcb7-1e1511bbe21a",
+  "versionId": "318327e3-1add-4536-bd30-65d54a05ce8b",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "edfa04da4352b76b714045fcefc9f1227bab9d1c576bb2ee9c95c16dda382075"
